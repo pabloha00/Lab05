@@ -55,6 +55,13 @@ uint8_t AR1 = 0; //Variables para el antirrebote
 uint8_t AR2 = 0;
 uint8_t AR3 = 0;
 uint8_t AR4 = 0;
+uint8_t A = 0;
+uint8_t B = 0;
+uint8_t C = 0;
+uint8_t AB = 0;
+uint8_t ABC = 0;
+uint8_t cc = 0;
+uint8_t en = 0;
 uint8_t BOTON = 0;
 
 //PROTOTIPO FUNCIONES
@@ -71,7 +78,6 @@ void __interrupt() ISR(void){
     }
     if (PIR1bits.TXIF == 1){    //El transmit buffer del EUSART está vacío
         envio();    //Se mandará caracter por caracter con esta función
-        PIE1bits.TXIE = 0;
     }
     if (INTCONbits.RBIF == 1){ //Cambia puerto B
         INTCONbits.RBIF = 0;
@@ -103,9 +109,15 @@ void main(void) {
     Setup();    //Setup
     USARTcon(); //Configuración de EUSART
     while(1){
-        if(signo != 13 && signo != 43 && signo != 45){  //Si el caracter ingresado no es + - o enter, no se sumará ni restará
+        /*if(signo != 13 && signo != 43 && signo != 45){  //Si el caracter ingresado no es + - o enter, no se sumará ni restará
             sum = 0;
             res = 0;
+        }*/
+        if(57<signo && signo<48){
+            cc = 0;
+        }
+        else{
+            en = 1;
         }
         CONTADOR(); //Contar leer y hacer conversión de datos
         LECT1();    
@@ -186,7 +198,7 @@ void envio(void){   //Lectura de la terminal virtual
 }
 
 void CONTADOR(void){
-    if (signo == 43){   //Si el signo es "+" (43 en código ascii)
+    /*if (signo == 43){   //Si el signo es "+" (43 en código ascii)
         sum = 1;    //Se levantará la bandera de suma
     }
     
@@ -202,5 +214,32 @@ void CONTADOR(void){
     if(signo ==13 && res == 1){ //Y se apacha enter
         res = 0;
         CONT--; //Se restará
+    }*/
+    if(47<signo && signo<58 && en==1){
+        cc++;
+        en=0;
+        if (cc==1){
+            A = signo-48;
+        }
+        if (cc==2){
+            B = signo-48;
+            AB = A*10+B;
+        }
+        if (cc==3){
+            C = signo-48;
+            ABC = A*100+B*10+C;
+        }
+    }
+    if (signo==13 && cc==1){
+        cc = 0;
+        CONT=A;
+    }
+    if (signo==13 && cc==2){
+        cc = 0;
+        CONT=AB;
+    }
+    if (signo==13 && cc==3){
+        cc = 0;
+        CONT=ABC;
     }
 }

@@ -4,4 +4,5 @@
 #include <xc.h> 
 
 char num_ascii(uint8_t num);
+char num_dec(uint8_t num);
 #endif	/* LCDNUM_H */

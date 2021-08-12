@@ -375,3 +375,145 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;ASCII.c: 49: }
 [e :UE 138 ]
 }
+"50
+[; ;ASCII.c: 50: char num_dec(uint8_t num){
+[v _num_dec `(uc ~T0 @X0 1 ef1`uc ]
+{
+[e :U _num_dec ]
+[v _num `uc ~T0 @X0 1 r1 ]
+[f ]
+"51
+[; ;ASCII.c: 51:  switch(num){
+[e $U 154  ]
+{
+"52
+[; ;ASCII.c: 52:   default:
+[e :U 155 ]
+"53
+[; ;ASCII.c: 53:   return 0x30;
+[e ) -> -> 48 `i `uc ]
+[e $UE 152  ]
+"54
+[; ;ASCII.c: 54:   break;
+[e $U 153  ]
+"56
+[; ;ASCII.c: 56:         case 0x30:
+[e :U 156 ]
+"57
+[; ;ASCII.c: 57:   return 0;
+[e ) -> -> 0 `i `uc ]
+[e $UE 152  ]
+"58
+[; ;ASCII.c: 58:   break;
+[e $U 153  ]
+"60
+[; ;ASCII.c: 60:   case 0x31:
+[e :U 157 ]
+"61
+[; ;ASCII.c: 61:   return 1;
+[e ) -> -> 1 `i `uc ]
+[e $UE 152  ]
+"62
+[; ;ASCII.c: 62:   break;
+[e $U 153  ]
+"64
+[; ;ASCII.c: 64:   case 0x32:
+[e :U 158 ]
+"65
+[; ;ASCII.c: 65:   return 2;
+[e ) -> -> 2 `i `uc ]
+[e $UE 152  ]
+"66
+[; ;ASCII.c: 66:   break;
+[e $U 153  ]
+"68
+[; ;ASCII.c: 68:   case 0x33:
+[e :U 159 ]
+"69
+[; ;ASCII.c: 69:   return 3;
+[e ) -> -> 3 `i `uc ]
+[e $UE 152  ]
+"70
+[; ;ASCII.c: 70:   break;
+[e $U 153  ]
+"72
+[; ;ASCII.c: 72:   case 0x34:
+[e :U 160 ]
+"73
+[; ;ASCII.c: 73:   return 4;
+[e ) -> -> 4 `i `uc ]
+[e $UE 152  ]
+"74
+[; ;ASCII.c: 74:   break;
+[e $U 153  ]
+"76
+[; ;ASCII.c: 76:   case 0x35:
+[e :U 161 ]
+"77
+[; ;ASCII.c: 77:   return 5;
+[e ) -> -> 5 `i `uc ]
+[e $UE 152  ]
+"78
+[; ;ASCII.c: 78:   break;
+[e $U 153  ]
+"80
+[; ;ASCII.c: 80:   case 0x36:
+[e :U 162 ]
+"81
+[; ;ASCII.c: 81:   return 6;
+[e ) -> -> 6 `i `uc ]
+[e $UE 152  ]
+"82
+[; ;ASCII.c: 82:   break;
+[e $U 153  ]
+"84
+[; ;ASCII.c: 84:   case 0x37:
+[e :U 163 ]
+"85
+[; ;ASCII.c: 85:   return 7;
+[e ) -> -> 7 `i `uc ]
+[e $UE 152  ]
+"86
+[; ;ASCII.c: 86:   break;
+[e $U 153  ]
+"88
+[; ;ASCII.c: 88:   case 0x38:
+[e :U 164 ]
+"89
+[; ;ASCII.c: 89:   return 8;
+[e ) -> -> 8 `i `uc ]
+[e $UE 152  ]
+"90
+[; ;ASCII.c: 90:   break;
+[e $U 153  ]
+"92
+[; ;ASCII.c: 92:   case 0x39:
+[e :U 165 ]
+"93
+[; ;ASCII.c: 93:   return 9;
+[e ) -> -> 9 `i `uc ]
+[e $UE 152  ]
+"94
+[; ;ASCII.c: 94:   break;
+[e $U 153  ]
+"95
+[; ;ASCII.c: 95:  }
+}
+[e $U 153  ]
+[e :U 154 ]
+[e [\ -> _num `i , $ -> 48 `i 156
+ , $ -> 49 `i 157
+ , $ -> 50 `i 158
+ , $ -> 51 `i 159
+ , $ -> 52 `i 160
+ , $ -> 53 `i 161
+ , $ -> 54 `i 162
+ , $ -> 55 `i 163
+ , $ -> 56 `i 164
+ , $ -> 57 `i 165
+ 155 ]
+[e :U 153 ]
+"96
+[; ;ASCII.c: 96: }
+[e :UE 152 ]
+}
