@@ -2649,7 +2649,7 @@ typedef uint16_t uintptr_t;
 
 
 char num_ascii(uint8_t num);
-char num_dec(uint8_t num);
+char num_ascii_dec(uint8_t num);
 # 29 "main.c" 2
 
 # 1 "./USART.h" 1
@@ -2690,13 +2690,14 @@ uint8_t AR1 = 0;
 uint8_t AR2 = 0;
 uint8_t AR3 = 0;
 uint8_t AR4 = 0;
-uint8_t A = 0;
-uint8_t B = 0;
-uint8_t C = 0;
-uint8_t AB = 0;
-uint8_t ABC = 0;
+char A = 0;
+char B = 0;
+char C = 0;
+char ABC = 0;
+char A1 = 0;
+char A2 = 0;
+char A3 = 0;
 uint8_t cc = 0;
-uint8_t en = 0;
 uint8_t BOTON = 0;
 
 
@@ -2710,6 +2711,7 @@ void CONTADOR(void);
 void __attribute__((picinterrupt(("")))) ISR(void){
     if (PIR1bits.RCIF == 1){
         signo = RCREG;
+        CONTADOR();
     }
     if (PIR1bits.TXIF == 1){
         envio();
@@ -2744,20 +2746,16 @@ void main(void) {
     Setup();
     USARTcon();
     while(1){
-
-
-
-
+        if(signo != 13 && signo != 43 && signo != 45){
+            sum = 0;
+            res = 0;
+        }
         if(57<signo && signo<48){
             cc = 0;
         }
-        else{
-            en = 1;
-        }
-        CONTADOR();
         LECT1();
         LECT2();
-        PORTD = BOTON;
+        PORTD = A1;
         PORTA = CONT;
     }
 }
@@ -2827,38 +2825,47 @@ void envio(void){
         TXREG = AU2;
     }
     if (toggleTX == 4){
-        TXREG = 13;
+        TXREG = 10;
         toggleTX = 0;
     }
 }
 
 void CONTADOR(void){
-# 218 "main.c"
-    if(47<signo && signo<58 && en==1){
+    if (signo == 43){
+        sum = 1;
+    }
+
+    if (signo == 13 && sum == 1){
+            sum = 0;
+            A1++;
+    }
+
+    if (signo == 45){
+        res = 1;
+    }
+
+    if(signo ==13 && res == 1){
+        res = 0;
+        A1--;
+    }
+    if(47<signo && signo<58){
         cc++;
-        en=0;
         if (cc==1){
-            A = signo-48;
+            A = num_ascii_dec(signo);
         }
-        if (cc==2){
-            B = signo-48;
-            AB = A*10+B;
+        else if (cc==2){
+            B = num_ascii_dec(signo);
         }
-        if (cc==3){
-            C = signo-48;
+        else if (cc==3){
+            C = num_ascii_dec(signo);
             ABC = A*100+B*10+C;
         }
     }
-    if (signo==13 && cc==1){
-        cc = 0;
-        CONT=A;
-    }
-    if (signo==13 && cc==2){
-        cc = 0;
-        CONT=AB;
-    }
-    if (signo==13 && cc==3){
+    if (signo==10 && cc==3){
         cc = 0;
         CONT=ABC;
+    }
+    if (cc==4){
+        cc=0;
     }
 }

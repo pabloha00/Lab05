@@ -376,10 +376,10 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :UE 138 ]
 }
 "50
-[; ;ASCII.c: 50: char num_dec(uint8_t num){
-[v _num_dec `(uc ~T0 @X0 1 ef1`uc ]
+[; ;ASCII.c: 50: char num_ascii_dec(uint8_t num){
+[v _num_ascii_dec `(uc ~T0 @X0 1 ef1`uc ]
 {
-[e :U _num_dec ]
+[e :U _num_ascii_dec ]
 [v _num `uc ~T0 @X0 1 r1 ]
 [f ]
 "51
@@ -390,8 +390,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;ASCII.c: 52:   default:
 [e :U 155 ]
 "53
-[; ;ASCII.c: 53:   return 0x30;
-[e ) -> -> 48 `i `uc ]
+[; ;ASCII.c: 53:   return 0;
+[e ) -> -> 0 `i `uc ]
 [e $UE 152  ]
 "54
 [; ;ASCII.c: 54:   break;

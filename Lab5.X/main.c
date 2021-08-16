@@ -33,13 +33,13 @@
 // Use project enums instead of #define for ON and OFF.
 
 /****************************VARIABLES***************************************/
-char Cen1 = 0;  //Dígito de potenciómetros y contador
+char Cen1 = 0;  //Dígito de contador
 char Dec1 = 0;
 char Un1 = 0;   
 char AC1 = 0;
 char AD1 = 0;
 char AU1 = 0;
-char Cen2 = 0;  //Dígito de potenciómetros y contador
+char Cen2 = 0;  //Dígito de contador
 char Dec2 = 0;
 char Un2 = 0;   
 char AC2 = 0;
@@ -55,13 +55,14 @@ uint8_t AR1 = 0; //Variables para el antirrebote
 uint8_t AR2 = 0;
 uint8_t AR3 = 0;
 uint8_t AR4 = 0;
-uint8_t A = 0;
-uint8_t B = 0;
-uint8_t C = 0;
-uint8_t AB = 0;
-uint8_t ABC = 0;
+char A = 0;
+char B = 0;
+char C = 0;
+char ABC = 0;
+char A1 = 0;
+char A2 = 0;
+char A3 = 0;
 uint8_t cc = 0;
-uint8_t en = 0;
 uint8_t BOTON = 0;
 
 //PROTOTIPO FUNCIONES
@@ -75,6 +76,7 @@ void CONTADOR(void);    //Antirrebote del contador
 void __interrupt() ISR(void){
     if (PIR1bits.RCIF == 1){    //El recieve buffer del EUSART está lleno
         signo = RCREG; //El signo será el dato recivido
+        CONTADOR();
     }
     if (PIR1bits.TXIF == 1){    //El transmit buffer del EUSART está vacío
         envio();    //Se mandará caracter por caracter con esta función
@@ -109,20 +111,16 @@ void main(void) {
     Setup();    //Setup
     USARTcon(); //Configuración de EUSART
     while(1){
-        /*if(signo != 13 && signo != 43 && signo != 45){  //Si el caracter ingresado no es + - o enter, no se sumará ni restará
+        if(signo != 13 && signo != 43 && signo != 45){  //Si el caracter ingresado no es + - o enter, no se sumará ni restará
             sum = 0;
             res = 0;
-        }*/
+        }
         if(57<signo && signo<48){
             cc = 0;
         }
-        else{
-            en = 1;
-        }
-        CONTADOR(); //Contar leer y hacer conversión de datos
         LECT1();    
         LECT2();
-        PORTD = BOTON;
+        PORTD = A1;
         PORTA = CONT;
     }
 }
@@ -192,19 +190,19 @@ void envio(void){   //Lectura de la terminal virtual
         TXREG = AU2;
     }
     if (toggleTX == 4){ //brk
-        TXREG = 13;
+        TXREG = 10;
         toggleTX = 0;
     }
 }
 
 void CONTADOR(void){
-    /*if (signo == 43){   //Si el signo es "+" (43 en código ascii)
+    if (signo == 43){   //Si el signo es "+" (43 en código ascii)
         sum = 1;    //Se levantará la bandera de suma
     }
     
     if (signo == 13 && sum == 1){   //Si se apacha enter al estar la bandera de suma levantada
             sum = 0;
-            CONT++;                 //El contador se le sumará 1
+            A1++;                 //El contador se le sumará 1
     }
     
     if (signo == 45){  //Si el signo es -
@@ -213,33 +211,26 @@ void CONTADOR(void){
 
     if(signo ==13 && res == 1){ //Y se apacha enter
         res = 0;
-        CONT--; //Se restará
-    }*/
-    if(47<signo && signo<58 && en==1){
+        A1--; //Se restará
+    }
+    if(47<signo && signo<58){
         cc++;
-        en=0;
         if (cc==1){
-            A = signo-48;
+            A = num_ascii_dec(signo);
         }
-        if (cc==2){
-            B = signo-48;
-            AB = A*10+B;
+        else if (cc==2){
+            B = num_ascii_dec(signo);
         }
-        if (cc==3){
-            C = signo-48;
+        else if (cc==3){
+            C = num_ascii_dec(signo);
             ABC = A*100+B*10+C;
         }
     }
-    if (signo==13 && cc==1){
-        cc = 0;
-        CONT=A;
-    }
-    if (signo==13 && cc==2){
-        cc = 0;
-        CONT=AB;
-    }
-    if (signo==13 && cc==3){
+    if (signo==10 && cc==3){
         cc = 0;
         CONT=ABC;
+    }
+    if (cc==4){
+        cc=0;
     }
 }

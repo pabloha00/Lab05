@@ -2629,7 +2629,7 @@ extern __bank0 __bit __timeout;
 
 
 char num_ascii(uint8_t num);
-char num_dec(uint8_t num);
+char num_ascii_dec(uint8_t num);
 # 1 "ASCII.c" 2
 
 
@@ -2680,10 +2680,10 @@ char num_ascii(uint8_t num){
   break;
  }
 }
-char num_dec(uint8_t num){
+char num_ascii_dec(uint8_t num){
  switch(num){
   default:
-  return 0x30;
+  return 0;
   break;
 
         case 0x30:
