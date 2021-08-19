@@ -1,8 +1,8 @@
 /*
- * File:   Lab 2
+ * File:   Lab 5
  * Author: Pablo Herrarte
  * Curso: Electrónica Digital 2 
- * Fecha: 27/07/2021
+ * Fecha: 18/08/2021
  */
 
 // PIC16F887 Configuration Bit Settings
@@ -45,24 +45,21 @@ char Un2 = 0;
 char AC2 = 0;
 char AD2 = 0;
 char AU2 = 0;
-uint8_t T = 1;  //Toggle para controlar dos señales analógicas
 uint8_t toggleTX = 0;   //contador para mandar datos a la terminal virtual
 uint8_t signo = 0;      //Control del signo para transmitir datos desde la terminal virtual
 uint8_t sum = 0;        //Suma del contador
 uint8_t res = 0;        //Resta del contador
 uint8_t CONT = 0;       //Contador
-uint8_t AR1 = 0; //Variables para el antirrebote 
+uint8_t AR1 = 0; //Variables para el antirrebote para pushbottons
 uint8_t AR2 = 0;
 uint8_t AR3 = 0;
 uint8_t AR4 = 0;
-char A = 0;
+char A = 0;     //Dígitos para recibir datos de Adafruit
 char B = 0;
 char C = 0;
-char ABC = 0;
-char A1 = 0;
-char A2 = 0;
-char A3 = 0;
-uint8_t cc = 0;
+char ABC = 0;   //Los dígitos sumados para mandaros al puerto A
+char A1 = 0;   
+uint8_t cc = 0; //Contador para los dígitos que recibe el pic
 uint8_t BOTON = 0;
 
 //PROTOTIPO FUNCIONES
@@ -83,7 +80,7 @@ void __interrupt() ISR(void){
     }
     if (INTCONbits.RBIF == 1){ //Cambia puerto B
         INTCONbits.RBIF = 0;
-        //Anti rebote de los dos botones
+        //Anti rebote de los dos pushbuttons
         AR1 = PORTBbits.RB0;
         if (AR1==0){
             AR2=0;    
@@ -115,13 +112,13 @@ void main(void) {
             sum = 0;
             res = 0;
         }
-        if(57<signo && signo<48){
+        if(57<signo && signo<48){ //Si el signo no es un número, cc será 0
             cc = 0;
         }
         LECT1();    
         LECT2();
-        PORTD = A1;
-        PORTA = CONT;
+        PORTD = A1;         //El contador se desplegará en el puerto D
+        PORTA = CONT;       //El dato que recibe desde Adafruit estará en el puerto A
     }
 }
 
@@ -130,24 +127,24 @@ void Setup(void){
     //CONFIG I&0
     ANSEL = 0;
     ANSELH = 0;
-    ANSEL = 0; //Puertos analógicos y digitales
+    ANSEL = 0; //Puertos digitales
     TRISA = 0; //Inputs para las señales analógicas
-    TRISB = 0b00000011;  //Outputs
+    TRISB = 0b00000011;  //Inputs para pushbuttons
     TRISC = 0b10000000; //Input para RX
     TRISD = 0; //Outputs
     TRISE = 0; //Outputs
-    PORTA = 0; //Potenciometros
-    PORTB = 0; 
+    PORTA = 0; //Dato que recibe el PIC
+    PORTB = 0; //Pushbuttons
     PORTC = 0; //RX y TX
-    PORTD = 0; //Pines de LCD. (D0 a D7)
-    PORTE = 0; //Pines de LCD. (RS, En, RW)
+    PORTD = 0; //Contador que recibe desde la computadora
+    PORTE = 0; //
     INTCONbits.TMR0IF = 0; //Interrupciones
     INTCONbits.RBIF = 0;
     INTCONbits.GIE = 1; //Habilitar interrupciones
     INTCONbits.PEIE = 1; 
     INTCONbits.T0IE = 0; //Interrupción del timer 0
-    INTCONbits.RBIE = 1;
-    IOCBbits.IOCB0 = 1;
+    INTCONbits.RBIE = 1; //Cambio en el puerto B
+    IOCBbits.IOCB0 = 1; //Interrupt on charge
     IOCBbits.IOCB1 = 1;
     PIR1bits.ADIF = 0; //Función AD lisa para comenzar
     OSCCONbits.IRCF0 = 1; //Configuración del oscilador (8MHz)
@@ -213,9 +210,9 @@ void CONTADOR(void){
         res = 0;
         A1--; //Se restará
     }
-    if(47<signo && signo<58){
-        cc++;
-        if (cc==1){
+    if(47<signo && signo<58){       //Si el signo es un número
+        cc++;                       //cc se sumará una vez
+        if (cc==1){                 // Se convierte cada dígito hexadecimal en decimal
             A = num_ascii_dec(signo);
         }
         else if (cc==2){
@@ -223,12 +220,12 @@ void CONTADOR(void){
         }
         else if (cc==3){
             C = num_ascii_dec(signo);
-            ABC = A*100+B*10+C;
+            ABC = A*100+B*10+C;     //Se suma cada dígito
         }
     }
-    if (signo==10 && cc==3){
+    if (signo==10 && cc==3){        //Si se coloca un enter
         cc = 0;
-        CONT=ABC;
+        CONT=ABC;                   //El contador será igual a ABC
     }
     if (cc==4){
         cc=0;

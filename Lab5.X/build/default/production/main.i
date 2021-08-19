@@ -2680,7 +2680,6 @@ char Un2 = 0;
 char AC2 = 0;
 char AD2 = 0;
 char AU2 = 0;
-uint8_t T = 1;
 uint8_t toggleTX = 0;
 uint8_t signo = 0;
 uint8_t sum = 0;
@@ -2695,8 +2694,6 @@ char B = 0;
 char C = 0;
 char ABC = 0;
 char A1 = 0;
-char A2 = 0;
-char A3 = 0;
 uint8_t cc = 0;
 uint8_t BOTON = 0;
 
